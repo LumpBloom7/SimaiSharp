@@ -12,7 +12,7 @@ namespace SimaiSharp
     /// </para>
     /// <para>
     /// This class extracts key-value data from a maidata file.
-    /// For simai chart serialization, use <see cref="SimaiSharp.SimaiConvert"/>
+    /// For simai chart serialization, use <see cref="SimaiConvert"/>
     /// </para>
     /// </summary>
     public sealed class SimaiFile : IDisposable
@@ -26,9 +26,9 @@ namespace SimaiSharp
             var fileStream = new FileStream(file.FullName, FileMode.Open, FileAccess.Read);
 
             // Determine the encoding of the file
-            var buffer       = new byte[64];
-            var numCharsRead = fileStream.Read(buffer, 0, 64);
-            var encoding     = buffer[..numCharsRead].TryGetEncoding(sampleSize);
+            byte[] buffer = new byte[64];
+            int numCharsRead = fileStream.Read(buffer, 0, 64);
+            var encoding = buffer[..numCharsRead].TryGetEncoding(sampleSize);
 
             // We've already read 64 chars, so we'll reset here.
             fileStream.Position = 0;
@@ -61,12 +61,12 @@ namespace SimaiSharp
         {
             _simaiReader.BaseStream.Position = 0;
 
-            var currentKey   = string.Empty;
+            string currentKey = string.Empty;
             var currentValue = new StringBuilder();
 
             while (!_simaiReader.EndOfStream)
             {
-                var line = _simaiReader.ReadLine();
+                string? line = _simaiReader.ReadLine();
 
                 if (line == null)
                     break;
@@ -79,7 +79,7 @@ namespace SimaiSharp
                         currentValue.Clear();
                     }
 
-                    var keyValuePair = line.Split('=', 2);
+                    string[] keyValuePair = line.Split('=', 2);
                     currentKey = keyValuePair[0][1..];
                     currentValue.AppendLine(keyValuePair[1]);
                 }
@@ -97,15 +97,15 @@ namespace SimaiSharp
         {
             _simaiReader.BaseStream.Position = 0;
 
-            var keyPart       = $"&{key}=";
-            var keyPartLength = keyPart.Length;
+            string keyPart = $"&{key}=";
+            int keyPartLength = keyPart.Length;
 
-            var result       = new StringBuilder();
-            var readingValue = false;
+            var result = new StringBuilder();
+            bool readingValue = false;
 
             while (!_simaiReader.EndOfStream)
             {
-                var line = _simaiReader.ReadLine();
+                string? line = _simaiReader.ReadLine();
 
                 if (line == null)
                     break;

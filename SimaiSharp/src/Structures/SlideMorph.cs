@@ -1,8 +1,8 @@
 namespace SimaiSharp.Structures
 {
-	public enum SlideMorph
-	{
-		FadeIn,
-		SuddenIn
-	}
+    public enum SlideMorph
+    {
+        FadeIn,
+        SuddenIn
+    }
 }

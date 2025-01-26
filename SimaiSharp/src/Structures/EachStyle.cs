@@ -1,9 +1,9 @@
 namespace SimaiSharp.Structures
 {
-	public enum EachStyle
-	{
-		Default,
-		ForceBroken,
-		ForceEach
-	}
+    public enum EachStyle
+    {
+        Default,
+        ForceBroken,
+        ForceEach
+    }
 }

@@ -7,12 +7,12 @@ namespace SimaiSharp.Internal.LexicalAnalysis
 {
     internal sealed class Tokenizer
     {
-        private const char Space            = (char)0x0020;
-        private const char EnSpace          = (char)0x2002;
+        private const char Space = (char)0x0020;
+        private const char EnSpace = (char)0x2002;
         private const char PunctuationSpace = (char)0x2008;
         private const char IdeographicSpace = (char)0x3000;
 
-        private const char LineSeparator      = (char)0x2028;
+        private const char LineSeparator = (char)0x2028;
         private const char ParagraphSeparator = (char)0x2029;
 
         private const char EndOfFileChar = 'E';
@@ -51,9 +51,9 @@ namespace SimaiSharp.Internal.LexicalAnalysis
         };
 
         private readonly ReadOnlyMemory<char> _sequence;
-        private          int                  _current;
-        private          int                  _charIndex;
-        private          int                  _line = 1;
+        private int _current;
+        private int _charIndex;
+        private int _line = 1;
 
         private int _start;
 
@@ -82,7 +82,7 @@ namespace SimaiSharp.Internal.LexicalAnalysis
         private Token? ScanToken()
         {
             _charIndex++;
-            var c = Advance();
+            char c = Advance();
             switch (c)
             {
                 case ',':
@@ -95,14 +95,14 @@ namespace SimaiSharp.Internal.LexicalAnalysis
                 case '[':
                     return CompileSectionToken(TokenType.Duration, '[', ']');
 
-                case var _ when TryScanLocationToken(out var length):
+                case var _ when TryScanLocationToken(out int length):
                     _current += length - 1;
                     return CompileToken(TokenType.Location);
 
                 case var _ when DecoratorChars.Contains(c):
                     return CompileToken(TokenType.Decorator);
 
-                case var _ when IsReadingSlideDeclaration(out var length):
+                case var _ when IsReadingSlideDeclaration(out int length):
                     _current += length - 1;
                     return CompileToken(TokenType.Slide);
 
@@ -142,7 +142,7 @@ namespace SimaiSharp.Internal.LexicalAnalysis
 
         private bool TryScanLocationToken(out int length)
         {
-            var firstLocationChar = PeekPrevious();
+            char firstLocationChar = PeekPrevious();
 
             if (IsButtonLocation(firstLocationChar))
             {
@@ -155,7 +155,7 @@ namespace SimaiSharp.Internal.LexicalAnalysis
             if (!IsSensorLocation(firstLocationChar))
                 return false;
 
-            var secondLocationChar = Peek();
+            char secondLocationChar = Peek();
 
             if (IsButtonLocation(secondLocationChar))
             {
@@ -169,7 +169,7 @@ namespace SimaiSharp.Internal.LexicalAnalysis
                 return true;
             }
 
-            var secondCharIsEmpty = SeparatorChars.Contains(secondLocationChar) ||
+            bool secondCharIsEmpty = SeparatorChars.Contains(secondLocationChar) ||
                                     secondLocationChar is '\n' or '\0';
 
             // This is the notation for EOF.
@@ -187,7 +187,7 @@ namespace SimaiSharp.Internal.LexicalAnalysis
                 return false;
             }
 
-            var nextChar = Peek();
+            char nextChar = Peek();
 
             length = nextChar is 'p' or 'q' ? 2 : 1;
             return true;

@@ -1,7 +1,6 @@
 using System;
 using System.Globalization;
 using System.Runtime.CompilerServices;
-using System.Xml.XPath;
 using SimaiSharp.Internal.Errors;
 using SimaiSharp.Internal.LexicalAnalysis;
 
